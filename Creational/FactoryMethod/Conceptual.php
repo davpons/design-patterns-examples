@@ -7,7 +7,6 @@ interface Product
 
 abstract class Creator
 {
-
     abstract public function factoryMethod(): Product;
 
     public function someOperation(): string
@@ -19,7 +18,6 @@ abstract class Creator
 
         return $result;
     }
-
 }
 
 class ConcreteCreator1 extends Creator
