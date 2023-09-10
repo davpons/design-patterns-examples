@@ -43,9 +43,17 @@ class CardFactory
 
     public function getCard(string $suit, string $value): Card
     {
-        foreach ($this->cards as $card) {
+        $requestedCard = new StandardCard($suit, $value);
 
-        } 
+        foreach ($this->cards as $card) {
+            if ($card->equals($requestedCard)) {
+                return $card;
+            }
+        }
+
+        $this->cards[] = $requestedCard;
+
+        return $requestedCard;
     }
 }
 
