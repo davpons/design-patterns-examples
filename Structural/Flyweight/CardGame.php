@@ -2,7 +2,30 @@
 
 class CardGame
 {
+    private CardFactory $cardFactory;
 
+    public function __construct(CardFactory $cardFactory)
+    {
+        $this->cardFactory = $cardFactory;
+    }
+
+    public function getCard(string $suit, string $value): PlayingCard
+    {
+        $card = $this->cardFactory->getCard($suit, $value);
+
+        return new PlayingCard($card, false);
+    }
+
+    public function getWildCard(): PlayingCard
+    {
+        return new PlayingCard(new WildCard(), false);
+    }
+    
+    public function setCard(PlayingCard $wildCard, PlayingCard $standardCard): void
+    {
+        $w = $wildCard->getCard();
+        $w->setCard($standardCard->getCard());
+    }
 }
 
 class PlayingCard implements Stringable
@@ -102,7 +125,7 @@ class StandardCard extends Card
 
 class WildCard extends Card
 {
-    private StandardCard $standardCard;
+    private ?StandardCard $standardCard;
 
     public function __construct()
     {
@@ -140,5 +163,31 @@ class WildCard extends Card
 
 class Client
 {
+    public function main():void
+    {
+        $this->println('PLAYING FIRST GAME CARD');
 
+        $cardFactory = new CardFactory();
+		$cardGame1 = new CardGame($cardFactory);
+
+		$playingCard1a = $cardGame1->getCard('HEARTS', 'SEVEN');
+		$playingCard1a->flip();
+		$this->println($playingCard1a); 
+
+		$playingCard1b = $cardGame1->getCard('PIKES', 'THREE');
+		$playingCard1b->flip();
+		$this->println($playingCard1b);        
+
+		$playingCard1c = $cardGame1->getWildCard();
+		$cardGame1->setCard($playingCard1c, $playingCard1a);
+		$playingCard1c->flip();
+		$this->println($playingCard1c);
+    }
+
+    public function println(string $value): void
+    {
+        echo $value . '<br>';
+    }
 }
+
+(new Client())->main();
